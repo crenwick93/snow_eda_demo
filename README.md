@@ -20,7 +20,7 @@ Assumptions
 Actions on AAP
 ------------
 We have to create two credentials for this demo. One is a token for the event stream to accept incoming messages, the other is the AAP credential to run a job template.
-Log into AAP. Navigate to Automation Decisions > Infrastructure > Credentials. Click Create credential. Give the token a name (SNOW_token), choose an organisation, select 'Token Event Stream'. In the Type Details section, generate a random token and paste it into the Token field. Leave HTTP Header Key as 'Authorization' (default). Then click 'Create credential'.
+Log into AAP. Navigate to Automation Decisions > Infrastructure > Credentials. Click Create credential. Give the token a name (SNOW_token), choose an organisation, select 'Token Event Stream'. In the Type Details section, generate a random token and paste it into the Token field (Keep a note of this token somewhere). Leave HTTP Header Key as 'Authorization' (default). Then click 'Create credential'.
 
 ![alt text](images/create_token_es_credential.png "Event Streams")
 
@@ -30,8 +30,28 @@ Now for the second credential, the instructions are the same but adjust the deta
 ![alt text](images/create_aap_es_credential.png "Event Streams")
 
 <br>
-Now that we have both tokens created, we can create the Automation Decisions project. Go to Automation Decisions > Projects, click 'Create project'.
+Now that we have both tokens created, we can create the Automation Decisions project. Go to Automation Decisions > Projects, click 'Create project'. Enter a name for the project and the Source control URL (This github project). Then click 'Create project'.
 
+![alt text](images/ad_project.png "Event Streams")
+
+<br>
+
+Next we need the Event Stream. Go to Automation Decisions > Event Streams. Click 'Create event stream'. Name the event stream, select 'Token Event Stream' as Event Stream Type, then select 'SNOW Token' as the credential (which we previously created). 'Forward events to rulebooks activation' should be enabled. Then click 'Create event stream'. Copy the URL that is displayed in the newly created event stream. We will need it in the next tasks.
+![alt text](images/snow_catalog_event_stream.png "Event Streams")
+
+<br>
+
+Lets test this
+------------
+
+Log onto your developer instance of Service Now. Navigate to 'All' > 'System Definition' > 'Scripts - Background'. This will allow you to run a freeform script to ensure the EDA has been setup correctly. Copy and paste the webhook_test_script.js script found in the snow_scripts directory of this repo. Replace 'example-url' with the URL that you copied in the above task. Replace the 'example-token' with the token found in credential you previously created. I have done so, in the example below. Click run and you should see a HTTP responce of 200 returned. 
+![alt text](images/test_script_snow.png "Event Streams")
+
+As well as 1 event recieved in your newly created event stream in AAP.
+<br>
+
+![alt text](images/event_recieved_test.png "Event Streams")
+<br>
 
 ServiceNow Business rule
 ------------
@@ -153,3 +173,9 @@ Extra manual steps I haven't automated yet:
 * Ensure ServiceNow host has relevant CI in the Linux DB
 * Add the same CI to the Demo inventory in controller
 * Paste the aap users private key into the credential in controller
+
+Troubleshooting
+------------
+Certs
+
+Ensure the root CA cert exists in System Definition > Certificates in your SNOW instance. Otherwise you will get certificate trust issues when trying to communicate with EDA. 
