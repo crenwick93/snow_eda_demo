@@ -12,7 +12,7 @@
       condition: event.meta is defined
       action:
         debug:
-          var: payload.short_description
+          var: event.payload.short_description
 
     # - name: Enrich new REQ received from Service Catalog
     #   condition: event.payload.sys_class_name == "sc_request" and event.payload.sys_mod_count == "0"
