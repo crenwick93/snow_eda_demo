@@ -53,13 +53,58 @@ As well as 1 event recieved in your newly created event stream in AAP.
 ![alt text](images/event_recieved_test.png "Event Streams")
 <br>
 
+ServiceNow Flow designer
+------------
+We now need to take a look at the flow of events, starting from servicenow and how we configure that.
+<br>
+Inside of ServiceNow go to all > Service catalog > Catalog administration > Fulfillment groups. From here create a new Fulfillment group called Event Driven Ansible.
+
+![alt text](images/new_fulfillment_group.png "Event Streams")
+<br>
+Now lets create a Flow that will utilise this group.
+<br>
+<br>
+Go to All > Process automation > Flow designer. Once inside the flow dewigner, find the "Service Catalog item request" Flow and click into it.
+<br>
+Then look for the three dots on the top right hand side and click "copy flow". This will ask you to name your new workflow. I've named it the following.
+Click copy, now we have your new workflow.
+![alt text](images/copy_flow.png "Event Streams")
+<br>
+
+<br>
+Taking a closer look at this workflow, we can see we have a few events happening.
+<br>
+Go ahead and delete actions "If Requested Item is a Backorder", "Requested Item Dept Head Approval" and the first "Create Catalog Task". These are not required and will allow us to see a little clearer what is happening. This should leave 6 steps, as shown below:
+<br>
+
+![alt text](images/new_workflow.png "Event Streams")
+<br>
+<br>
+Click into "Create Catalog Task" and change Assignment Group from Field Services to Event Driven Ansible. Then click done. Then at the top of that page, click save. Then make sure to click activate, to make this avaialble on a global scope.
+
+![alt text](images/edit_assignment_group.png "Event Streams")
+<br>
+
+ServiceNow Catalog Item
+------------
+In the SNOW developer instance, we have an existing catalog item called "VM Provisioning". Lets find that item and amend it, to use our new workflow.
+<br>
+<br>
+Go to, All > Service Catalog > Catalog Definitions > Maintain Items. Then search for "VM Provisioning". Click into the "VM Provisioning" item. You will see a tab called "Process Engine". Click on that, then adjust the flow to our newly created "EDA Service Catalog item request" flow, as shown below. Then click update.
+
+![alt text](images/change_flow.png "Event Streams")
+
+
 ServiceNow Business rule
 ------------
+We now need to setup a new business rule, that states that any new item created, with Assignment Group = Event Driven Ansible, should be processed by Event Driven Ansible. To do this, we need to create a business rule.
+<br>
+<br>
 
 Setup a business rule in ServiceNow. Navigate to **Activity subscriptions** -> **Administration** -> **Business rules** or just search for **Business rules**. Click "New" to create a new business rule. Fill in the first form:
 
 * Enter a name for the business rule
-* Table should be set to **Incident**
+* Table should be set to **sc_task**
 * Tick the **Advanced** checkbox
 
 In the **When to Run** section:
@@ -67,11 +112,14 @@ In the **When to Run** section:
 * Set action on insert.
 * when to run should be "after".
 * Add a condition. For example assignment group is equal to "Event Driven Ansible".
+![alt text](images/new_rule.png "Event Streams")
 
+<br>
+<br>
 
-![](images/eda_snow_business_rule.png)
-
-On the **advanced** tab, paste this sample script. This will send a json payload to EDA which contains the CI name, incident number and incident short description.
+On the **advanced** tab, copy the script from webhook_catalog_item.js found under the snow_scripts directory in this repo. Paste the script in the box provided and click save. 
+<br>
+This will send a json payload to EDA which contains the CI name, incident number and incident short description.
 
 **NOTE** make sure you substitute your EDA instance and port number in the example below - this line **r.setEndpoint("http://eda.example.com:5000/endpoint");**
 
@@ -179,3 +227,26 @@ Troubleshooting
 Certs
 
 Ensure the root CA cert exists in System Definition > Certificates in your SNOW instance. Otherwise you will get certificate trust issues when trying to communicate with EDA. 
+
+Other things you might want tio know: Creating ServiceNow Catalog Item
+------------
+We need to create a new servicenow catalog item to simulate our use case of creating a VM.
+
+Navigate to Srvice Catalog > Catalog Builder. Then click create a new catalog item.
+![alt text](images/new_cat_item.png "Event Streams")
+<br>
+<br>
+Select the template "Standard items in Service Catalog", then click "Use this template".
+<br>
+Choose a name and short description for your new catatlog item (appropriate to vm creation)
+![alt text](images/new_cat_item_vm.png "Event Streams")
+<br>
+Click through the catalog item creation process, until you get to questions. We'll keep this very simple for demo purposes.
+The only question we will create is a drop down menu for selecting where to create the VM.
+Write your question label, then under "name" put "network_vm_loc". This is a variable name we can use later.
+Click into choices and add choices: management, services, dmz. Make management the default answer and click "Insert question".
+
+![alt text](images/new_cat_item_question.png "Event Streams")
+<br>
+
+Leave every other option defaulted and click save. This will create the new catalog item.
