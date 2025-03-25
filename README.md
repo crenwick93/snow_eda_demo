@@ -53,13 +53,14 @@ As well as 1 event recieved in your newly created event stream in AAP.
 ![alt text](images/event_recieved_test.png "Event Streams")
 <br>
 
-ServiceNow Flow designer
+ServiceNow Flow configurations
 ------------
 We now need to take a look at the flow of events, starting from servicenow and how we configure that.
 <br>
-Inside of ServiceNow go to all > Service catalog > Catalog administration > Fulfillment groups. From here create a new Fulfillment group called Event Driven Ansible.
+First off we will create a new fulfillment group. Inside of ServiceNow go to all > Service catalog > Catalog administration > Fulfillment groups. From here create a new Fulfillment group called Event Driven Ansible. In future steps, we will create a buiness rule to ensure anything in this fulfillment group is processed by EDA.
 
 ![alt text](images/new_fulfillment_group.png "Event Streams")
+<br>
 <br>
 Now lets create a Flow that will utilise this group.
 <br>
