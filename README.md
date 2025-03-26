@@ -75,10 +75,26 @@ Click copy, now we have your new workflow.
 <br>
 Taking a closer look at this workflow, we can see we have a few events happening.
 <br>
-Go ahead and delete actions "If Requested Item is a Backorder", "Requested Item Dept Head Approval" and the first "Create Catalog Task". These are not required and will allow us to see a little clearer what is happening. This should leave 6 steps, as shown below:
+Go ahead and delete all of the actions, leaving only the trugger as shwon below:
 <br>
 
-![alt text](images/new_workflow.png "Event Streams")
+![alt text](images/no_actions_flow.png "Event Streams")
+<br>
+<br>
+Add a new action under ServiceNow Core > Ask for Approval.
+
+![alt text](images/add_approval_flow.png "Event Streams")
+<br>
+
+Drag the 'Requested Item Record' on the right to the Record box. Table, Approval Field and Journal Field should auto populate.
+![alt text](images/new_approve_pill.png "Event Streams")
+<br>
+
+Under rules, we'll keep this simple and ask the System Administrator to approve. Select Approve **When** Anyone Approves. Then click the Add User button circled below to add the System Administrator. 
+
+![alt text](images/sys_admin_approve.png "Event Streams")
+
+
 <br>
 <br>
 Click into "Create Catalog Task" and change Assignment Group from Field Services to Event Driven Ansible. Then click done. Then at the top of that page, click save. Then make sure to click activate, to make this avaialble on a global scope.
