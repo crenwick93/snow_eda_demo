@@ -5,15 +5,15 @@ This demo showcases how ServiceNow and Red Hat Ansible Automation Platform (AAP)
 Use Case Overview
 A user initiates a VM request via the ServiceNow Service Catalog. This request follows an approval and fulfillment process automated through ServiceNow and EDA:
 
-The user submits a VM request from the Service Catalog.
+1. The user submits a VM request from the Service Catalog.
 
-A ServiceNow Flow Designer workflow simulates a manager approval step.
+1. A ServiceNow Flow Designer workflow simulates a manager approval step.
 
-Once approved, the same flow continues to create a catalog task.
+1. Once approved, the same flow continues to create a catalog task.
 
-A ServiceNow business rule, triggered by the creation of this task, sends a payload containing the VM request details to Ansible EDA.
+1. A ServiceNow business rule, triggered by the creation of this task, sends a payload containing the VM request details to Ansible EDA.
 
-Ansible Automation Platform 2.5, using Event Streams, receives this event and executes the appropriate automation workflow to provision the VM.
+1. Ansible Automation Platform 2.5, using EDA Event Streams, receives this event and executes the appropriate automation workflow to provision the VM.
 
 This demo illustrates how event-driven automation can streamline IT operations by connecting user service requests in ServiceNow with automated VM provisioning workflows in Ansible Automation Platform.
 
