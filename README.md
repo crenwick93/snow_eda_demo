@@ -67,6 +67,9 @@ As well as 1 event recieved in your newly created event stream in AAP.
 ![alt text](images/event_recieved_test.png "Event Streams")
 <br>
 
+
+**Note: If you get any SSLPeerUnverifiedException errors at this point, look at the Troubleshooting section at the end of the tutorial**
+
 ServiceNow Flow configurations
 ------------
 We now need to take a look at the flow of events, starting from servicenow and how we configure that.
@@ -160,136 +163,38 @@ In the **When to Run** section:
 <br>
 <br>
 
-On the **advanced** tab, copy the script from webhook_catalog_item.js found under the snow_scripts directory in this repo. Paste the script in the box provided and click save. 
+On the **advanced** tab, copy the script from webhook_catalog_item.js found under the snow_scripts directory in this repo. Paste the script in the box provided and click save.
 <br>
 This will send a json payload to EDA which contains the CI name, incident number and incident short description.
 
-**NOTE** make sure you substitute your EDA instance and port number in the example below - this line **r.setEndpoint("http://eda.example.com:5000/endpoint");**
+**NOTE** make sure you substitute your EDA Event Stream URL and token shown in the screenshot below.
+![alt text](images/code_snippet.png "Event Streams")
+<br>
+<br>
+The rest of the script is used  for grabbing the important infomration from the request and composing the json package ready to send to EDA. Adjust this if you like.
+<br>
 
-```bash
-(function executeRule(current, previous /*null when async*/ ) {
- try {
- var r = new sn_ws.RESTMessageV2();
- // Enter EDA URL and port number here. In this one we have eda.example.com port 5000.
- r.setEndpoint("http://eda.example.com:5000/endpoint");
- r.setHttpMethod("post");
-
- // some stuff to get ci name instead of id
-
- var ci = new GlideRecord('cmdb_ci');
- ci.get('sys_id', current.getValue("cmdb_ci"));
- var ci_name = ci.getValue('name');
-
- var number = current.getValue("number");	
- var short_description = current.getValue("short_description");
- var cmdb_ci = current.getValue("cmdb_ci");	
-
- var obj = {
- "number": number,
- "short_description": short_description,
- "ci_name": ci_name,
-
- };
-		
- var body = JSON.stringify(obj);
- gs.info("Webhook body: " + body);
- r.setRequestBody(body);
-
- var response = r.execute();
- var httpStatus = response.getStatusCode();
- } catch (ex) {
- var message = ex.message;
-		gs.error("Error message: " + message);
- }
-
- gs.info("Webhook target HTTP status response: " + httpStatus);
-
-})(current, previous);
-```
-
-This was adapted from https://www.transposit.com/devops-blog/itsm/creating-webhooks-in-servicenow/
-
-
-Quick and easy test
+Now back to AAP to finish off this setup
 ------------
-
-SSH to your EDA controller and install netcat:
-
-```bash
-sudo dnf install nc -y
-```
-
-Start listening on port 5000
-
-```bash
-nc -l 5000
-```
-
-Create a ServiceNow Incident using the playbook in this repo or manually. Make sure you actually set a valid CI or it might not work.
+So at this point we have a Service Now catlog item configured to send a payload to EDA. But at this point EDA has no idea what to do with that payload. So now we'll create a Rulebook Activation to process that payload, and in turn process the request.
+<br>
+<br>
+In AAP, go to Automation Decisions > Rulebook Activations. Click 'Create rulebook activation'. Give it a suitable name and Organisation. From the project drop down, select 'EDA Demo' - the project we created previously. Under the Rulebook drop down, select snow_catalog_request.yml. You can see details of that rulebook in this repo under rulebooks (as this is the repo that project is reading from).
+<br>
+<br>
+Under Event streams, select the event stream 
 
 
-You'll see this payload come through to your EDA controller. If this works you can create a rulebook. Examples in this repo.
 
-```bash
-$ nc -l 5000
-^[[BPOST /endpoint HTTP/1.1
-Content-Length: 73
-X-SNC-INTEGRATION-SOURCE: b3331a101b02b5941024eb9b2d4bcbfb
-User-Agent: ServiceNow/1.0
-Host: eda.example.com:5000
-
-{"number":"INC0010004","short_description":"testing","ci_name":"lnux100"}
-```
-
-
-Pat's own notes because he forgets - AAP setup
-------------
-
-Edit vault file with ServiceNow and controller details:
-
-```bash
-ansible-vault edit group_vars/all/vault.yml 
-```
-
-Run the playbook to configure controller:
-
-```bash
-ansible-navigator run configure_controller.yml --ask-vault-pass
-```
-
-Extra manual steps I haven't automated yet:
-
-* Create a token for eda application and paste into EDA controller
-* Create rulebook and project in EDA controller
-* Ensure ServiceNow host has relevant CI in the Linux DB
-* Add the same CI to the Demo inventory in controller
-* Paste the aap users private key into the credential in controller
 
 Troubleshooting
 ------------
-Certs
-
-Ensure the root CA cert exists in System Definition > Certificates in your SNOW instance. Otherwise you will get certificate trust issues when trying to communicate with EDA. 
-
-Other things you might want tio know: Creating ServiceNow Catalog Item
-------------
-We need to create a new servicenow catalog item to simulate our use case of creating a VM.
-
-Navigate to Srvice Catalog > Catalog Builder. Then click create a new catalog item.
-![alt text](images/new_cat_item.png "Event Streams")
+**Certs - SSLPeerUnverifiedException error**
+<br>
+If you're getting this issue whenrunning the script on Service Now targeting EDA. You may need to add the root CA cert to SNOW. Make sure to use the cert corresponding to the load balancer if you have a HA installation.
+<br>
+Instructions: Go to System Definition > Certificates in your SNOW instance, you can add your root CA cert there.
 <br>
 <br>
-Select the template "Standard items in Service Catalog", then click "Use this template".
-<br>
-Choose a name and short description for your new catatlog item (appropriate to vm creation)
-![alt text](images/new_cat_item_vm.png "Event Streams")
-<br>
-Click through the catalog item creation process, until you get to questions. We'll keep this very simple for demo purposes.
-The only question we will create is a drop down menu for selecting where to create the VM.
-Write your question label, then under "name" put "network_vm_loc". This is a variable name we can use later.
-Click into choices and add choices: management, services, dmz. Make management the default answer and click "Insert question".
+**Any other issue**
 
-![alt text](images/new_cat_item_question.png "Event Streams")
-<br>
-
-Leave every other option defaulted and click save. This will create the new catalog item.
