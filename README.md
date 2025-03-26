@@ -94,14 +94,21 @@ Drag the 'Requested Item Record' on the right to the Record box. Table, Approval
 Under rules, we'll keep this simple and ask the System Administrator to approve. Select Approve **When** Anyone Approves. Then click the Add User button circled below to add the System Administrator. 
 
 ![alt text](images/sys_admin_approve.png "Event Streams")
+<br>
 
+Create a new action ServiceNow Core > Create Catalog Task. 
+
+![alt text](images/create_catalog_task.png "Event Streams")
+<br>
+Drag the 'Requested Item Record' from the left menu, into the Requested item box, (as shown in previous example). Give a short description of the task, then add an 'Assignment Group' field and set it to 'Event Driven Ansible' (The fulfillment group you created earlier).
+
+![alt text](images/cat_task_details.png "Event Streams")
 
 <br>
-<br>
-Click into "Create Catalog Task" and change Assignment Group from Field Services to Event Driven Ansible. Then click done. Then at the top of that page, click save. Then make sure to click activate, to make this avaialble on a global scope.
 
-![alt text](images/edit_assignment_group.png "Event Streams")
-<br>
+Optionally, you can add stages add point, as shown below. Once finished, click save and then activate to make the Flow available.
+
+![alt text](images/add_stage.png "Event Streams")
 
 ServiceNow Catalog Item
 ------------
