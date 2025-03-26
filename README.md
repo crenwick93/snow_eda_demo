@@ -1,7 +1,21 @@
-ServiceNow incident demo
+Demo Brief: Event-Driven VM Provisioning with ServiceNow and Ansible Automation Platform 2.5
 =========
+This demo showcases how ServiceNow and Red Hat Ansible Automation Platform (AAP) 2.5, using Event-Driven Ansible (EDA), can be integrated to automate virtual machine (VM) provisioning through a Service Catalog request.
 
-For this demo, we use ServiceNow business rules to send events to AAP 2.5 (EDA) each time an incident is opened. ServiceNow is the event source which will send a payload to EDA. EDA will be using an Event stream (only available on AAP 2.5>) to listen to listen for the payload. 
+Use Case Overview
+A user initiates a VM request via the ServiceNow Service Catalog. This request follows an approval and fulfillment process automated through ServiceNow and EDA:
+
+The user submits a VM request from the Service Catalog.
+
+A ServiceNow Flow Designer workflow simulates a manager approval step.
+
+Once approved, the same flow continues to create a catalog task.
+
+A ServiceNow business rule, triggered by the creation of this task, sends a payload containing the VM request details to Ansible EDA.
+
+Ansible Automation Platform 2.5, using Event Streams, receives this event and executes the appropriate automation workflow to provision the VM.
+
+This demo illustrates how event-driven automation can streamline IT operations by connecting user service requests in ServiceNow with automated VM provisioning workflows in Ansible Automation Platform.
 
 General info on Event Streams (simplified event routing)
 ------------
@@ -17,7 +31,7 @@ Assumptions
 - AAP 2.5 is deployed and default decision environment available
 - Service Now Developer instance has been created
 
-Actions on AAP
+Initial Actions on AAP
 ------------
 We have to create two credentials for this demo. One is a token for the event stream to accept incoming messages, the other is the AAP credential to run a job template.
 Log into AAP. Navigate to Automation Decisions > Infrastructure > Credentials. Click Create credential. Give the token a name (SNOW_token), choose an organisation, select 'Token Event Stream'. In the Type Details section, generate a random token and paste it into the Token field (Keep a note of this token somewhere). Leave HTTP Header Key as 'Authorization' (default). Then click 'Create credential'.
