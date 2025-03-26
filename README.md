@@ -84,7 +84,7 @@ Go ahead and delete all of the actions, leaving only the trigger as shown below:
 <br>
 Add a new action under ServiceNow Core > Ask for Approval.
 
-![alt text](images/add_approval_flow.png "Event Streams")
+![alt text](images/add_approval_flow1.png "Event Streams")
 <br>
 
 Drag the 'Requested Item Record' on the right to the Record box. Table, Approval Field and Journal Field should auto populate.
