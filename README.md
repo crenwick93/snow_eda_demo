@@ -69,13 +69,14 @@ Go to All > Process automation > Flow designer. Once inside the flow dewigner, f
 <br>
 Then look for the three dots on the top right hand side and click "copy flow". This will ask you to name your new workflow. I've named it the following.
 Click copy, now we have your new workflow.
+
 ![alt text](images/copy_flow.png "Event Streams")
 <br>
 
 <br>
 Taking a closer look at this workflow, we can see we have a few events happening.
 <br>
-Go ahead and delete all of the actions, leaving only the trugger as shwon below:
+Go ahead and delete all of the actions, leaving only the trigger as shown below:
 <br>
 
 ![alt text](images/no_actions_flow.png "Event Streams")
