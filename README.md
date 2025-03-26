@@ -109,6 +109,10 @@ Drag the 'Requested Item Record' from the left menu, into the Requested item box
 Optionally, you can add stages add point, as shown below. Once finished, click save and then activate to make the Flow available.
 
 ![alt text](images/add_stage.png "Event Streams")
+<br>
+<br>
+**Note: This flow is for demo purposes only, I have missed obvious things such as manager rejection to end the flow and more. You can include these things if you want, but i'm keeping things simple.**
+
 
 ServiceNow Catalog Item
 ------------
