@@ -182,8 +182,27 @@ So at this point we have a Service Now catlog item configured to send a payload 
 In AAP, go to Automation Decisions > Rulebook Activations. Click 'Create rulebook activation'. Give it a suitable name and Organisation. From the project drop down, select 'EDA Demo' - the project we created previously. Under the Rulebook drop down, select snow_catalog_request.yml. You can see details of that rulebook in this repo under rulebooks (as this is the repo that project is reading from).
 <br>
 <br>
-Under Event streams, select the event stream 
+Under Event streams, click on the litle cog, it will take you to the below screen. Select the event stream that you created earlier, then click save.
 
+![alt text](images/rule_event_stream.png "Event Streams")
+<br>
+<br>
+Then complete the rest of the rule activation form, selecting the AAP credential so that EDA can run job templates in controller. Also selecting your default decision environment so that we can run the rulebook. Your Rule activation should now look like the following. Click 'Create rulebook activation' and the rulebook will start up.
+
+![alt text](images/rule_complete.png "Event Streams")
+<br>
+<br>
+After a short while, you will see the rulebook running.
+
+![alt text](images/running_rulebook.png "Event Streams")
+<br>
+<br>
+Under Automation Decisions > Rulebook Activations you can see a high level view of your Rulebooks. This is an easy way to keep an eye on your Rulebooks and which ones are firing.
+
+![alt text](images/rule_fire_count.png "Event Streams")
+
+Lets try it out - Demo time.
+------------
 
 
 
