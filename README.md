@@ -234,6 +234,11 @@ Now go back to the approval screen in Service Now and click approve. After a lit
 <br>
 <br>
 Now we know that we are up and working. It's time to do some actual automation.
+<br>
+
+
+------------
+
 
 Troubleshooting
 ------------
