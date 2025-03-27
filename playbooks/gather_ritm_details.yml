@@ -1,16 +1,20 @@
 # Original Source: https://github.com/shadowman-lab/Ansible-SNOW/
 ---
-- name: Retrieve RITM details with retries
-  servicenow.itsm.api_info:
-    resource: sc_req_item
-#    sysparm_query: request={{ req_sys_id }}
-    sysparm_query: request=""
-    display_value: all
-    columns: [sys_id, number, description, short_description, cat_item, requested_for]
-  register: ritms
-  until: ritms.record is defined and ritms.record | length > 0
-  retries: 3
-  delay: 5
+- name: Enrich snow request details
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Retrieve RITM details with retries
+      servicenow.itsm.api_info:
+        resource: sc_req_item
+    #    sysparm_query: request={{ req_sys_id }}
+        sysparm_query: request=""
+        display_value: all
+        columns: [sys_id, number, description, short_description, cat_item, requested_for]
+      register: ritms
+      until: ritms.record is defined and ritms.record | length > 0
+      retries: 3
+      delay: 5
 
 # - name: Set RITM details fact
 #   ansible.builtin.set_fact:
