@@ -189,7 +189,7 @@ Under Event streams, click on the litle cog, it will take you to the below scree
 <br>
 Then complete the rest of the rule activation form, selecting the AAP credential so that EDA can run job templates in controller. Also selecting your default decision environment so that we can run the rulebook. Your Rule activation should now look like the following. Click 'Create rulebook activation' and the rulebook will start up.
 
-![alt text](images/rule_complete.png "Event Streams")
+![alt text](images/rule_complete1.png "Event Streams")
 <br>
 <br>
 After a short while, you will see the rulebook running.
@@ -201,10 +201,29 @@ Under Automation Decisions > Rulebook Activations you can see a high level view 
 
 ![alt text](images/rule_fire_count.png "Event Streams")
 
-Lets try it out - Demo time.
+Joining the dots - let's give it a go
 ------------
+At this point we configured everything on the Service Now side and everything on the EDA side, from a configuration perspecive at least - we will look at rulebooks more closely once we know it's all fully connected and working.
+<br>
+<br>
+Go to All > Catalogs. Then click into Technical Catalog. From that window, you will see 'VM Provisioning' under Services. Click on that.
+<br>
+<br>
+Complete the form with example vm details, then click order.
 
+![alt text](images/order_vm.png "Event Streams")
+<br>
+Now we need to approve that request. Go to All > Self Service > My Approvals. You will see a new approval requested.
 
+![alt text](images/new_approval.png "Event Streams")
+<br>
+<br>
+Click into the approval request. You will see the following screen. **Do not click approve just yet.**
+
+![alt text](images/pre_approval.png "Event Streams")
+<br>
+<br>
+Go back onto AAP, go to 
 
 Troubleshooting
 ------------
