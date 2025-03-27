@@ -179,7 +179,7 @@ Now back to AAP to finish off this setup
 So at this point we have a Service Now catlog item configured to send a payload to EDA. But at this point EDA has no idea what to do with that payload. So now we'll create a Rulebook Activation to process that payload, and in turn process the request.
 <br>
 <br>
-In AAP, go to Automation Decisions > Rulebook Activations. Click 'Create rulebook activation'. Give it a suitable name and Organisation. From the project drop down, select 'EDA Demo' - the project we created previously. Under the Rulebook drop down, select snow_catalog_request.yml. You can see details of that rulebook in this repo under rulebooks (as this is the repo that project is reading from).
+In AAP, go to Automation Decisions > Rulebook Activations. Click 'Create rulebook activation'. Give it a suitable name and Organisation. From the project drop down, select 'EDA Demo' - the project we created previously. Under the Rulebook drop down, select snow_rulebook_debug.yml. You can see details of that rulebook in this repo under rulebooks (as this is the repo that project is reading from). We are choosing this rulebook as an initial rulebook because it is very simple and will simply outpu the payload so that we know the conneectivity between SNOW and EDA is working, before we go to more advanced things.
 <br>
 <br>
 Under Event streams, click on the litle cog, it will take you to the below screen. Select the event stream that you created earlier, then click save.
@@ -223,7 +223,17 @@ Click into the approval request. You will see the following screen. **Do not cli
 ![alt text](images/pre_approval.png "Event Streams")
 <br>
 <br>
-Go back onto AAP, go to 
+Go back onto AAP, go to Automation Decisions > Rulebook Activations. Then click on your newly created rulebook activation. Then click on the history tab. You should see the rulebook running here, click into it, this will bring up the rulebook logs.
+
+![alt text](images/rulebook_logs.png "Event Streams")
+<br>
+<br>
+Now go back to the approval screen in Service Now and click approve. After a little while, you should see the payload recieved in the logs.
+
+![alt text](images/payload_recieved.png "Event Streams")
+<br>
+<br>
+Now we know that we are up and working. It's time to do some actual automation.
 
 Troubleshooting
 ------------
