@@ -8,13 +8,16 @@
       servicenow.itsm.api_info:
         resource: sc_req_item
     #    sysparm_query: request={{ req_sys_id }}
-        sysparm_query: request="REQ0010005"
-        display_value: all
-        columns: [sys_id, number, description, short_description, cat_item, requested_for]
+        # sysparm_query: request="REQ0010005"
+        # display_value: all
+        # columns: [sys_id, number, description, short_description, cat_item, requested_for]
       register: ritms
-      until: ritms.record is defined and ritms.record | length > 0
-      retries: 3
-      delay: 5
+      # until: ritms.record is defined and ritms.record | length > 0
+      # retries: 3
+      # delay: 5
+
+    - debug:
+        var: ritms
 
 # - name: Set RITM details fact
 #   ansible.builtin.set_fact:
