@@ -7,7 +7,7 @@
     - name: Retrieve RITM details with retries
       servicenow.itsm.api_info:
         resource: sc_req_item
-        sysparm_query: task_effective_number="RITM0010005"
+        sysparm_query: number=RITM0010005
         # sysparm_query: request="REQ0010005"
         # display_value: all
         # columns: [sys_id, number, description, short_description, cat_item, requested_for]
