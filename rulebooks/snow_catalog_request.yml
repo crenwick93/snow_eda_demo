@@ -15,7 +15,7 @@
           var: event.payload
 
     - name: Enrich new REQ received from Service Catalog
-      condition: event.payload is defined
+      condition: event.meta is defined
       action:
         run_job_template:
           name: "EDA Enrich ServiceNow REQ"
