@@ -28,7 +28,7 @@
 
     - name: Provision VM
       #condition: event.enriched_event.ritm_details is selectattr('cat_item.display_value', '==', "AAP EDA Multi Provision w/ Citrix")
-      condition: event.enriched_event.ritm_details is defined
+      condition: event.meta is defined
       action:
         run_job_template:
           name: "Demo Job Template"
