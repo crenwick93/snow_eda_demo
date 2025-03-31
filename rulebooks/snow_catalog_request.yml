@@ -33,6 +33,10 @@
         run_job_template:
           name: "Demo Job Template"
           organization: Default
+          job_args:
+            extra_vars:
+              req_sys_id: "test"
+              req_number: "test"
 
 
 
