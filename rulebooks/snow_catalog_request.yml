@@ -26,10 +26,6 @@
         run_job_template:
           name: "Demo Job Template"
           organization: Default
-          job_args:
-            extra_vars:
-              req_sys_id: "{{ event.enriched_event.req_sys_id | default('undefined') }}"
-              req_number: "{{ event.enriched_event.ritm_details[0].number.display_value | default('undefined') }}"
 
 
 
