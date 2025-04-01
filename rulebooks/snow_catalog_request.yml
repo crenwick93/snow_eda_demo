@@ -20,12 +20,22 @@
               req_sys_id: "{{ event.payload.req_sys_id }}"
               req_number: "{{ event.payload.ritm_number }}"
 
-    - name: Provision VM
-      condition: event.enriched_event is defined
+    - name: Provision Special Projects VM
+      condition: >
+        event.enriched_event is defined and
+        event.enriched_event.ritm_details[0].variables
+        | selectattr('name', 'equalto', 'business_purpose')
+        | map(attribute='value')
+        | first == "Special Projects"
       action:
         run_job_template:
           name: "Demo Job Template"
           organization: Default
+          job_args:
+            extra_vars:
+              vm_specific_variables: "{{ event.enriched_event.ritm_details[0].variables }}"
+              req_number: "{{ event.enriched_event.ritm_details[0].number.value }}"
+              requested_for_user: "{{ event.enriched_event.ritm_details[0].requested_for.display_value }}"
 
 
 

@@ -1,0 +1,16 @@
+---
+- name: Provision Special Project VM
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Provision Special Project VM
+      ansible.builtin.debug:
+        msg: |
+          Provision Special Project VM
+          ----------------------------
+          Request Number: {{ req_number }}
+          Requested For: {{ requested_for_user }}
+          ----------------------------
+          VM Request Details:
+          {{ vm_specific_variables }}
+
