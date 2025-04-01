@@ -21,7 +21,7 @@
               req_number: "{{ event.payload.ritm_number }}"
 
     - name: Provision Special Projects VM
-      condition: event.business_purpose == "Special Projects"
+      condition: event.business_purpose == "special_projects"
       action:
         run_job_template:
           name: "Provision Special Project VM"
