@@ -122,12 +122,24 @@
       loop_control:
         label: "{{ item.sys_id.value }}"
 
+    # Extracting a clean business purpose variable for demo purposes.
+    - name: Extract business_purpose from variables
+      ansible.builtin.set_fact:
+        business_purpose_value: >-
+          {{
+            enriched_event.ritm_details[0].variables
+            | selectattr('name', 'equalto', 'business_purpose')
+            | map(attribute='value')
+            | first
+          }}
+
     - name: Consolidate all facts and original event into set_stats
       ansible.builtin.set_stats:
         data:
           enriched_event: "{{ enriched_event }}"
           original_event: "{{ req_number | default({}) }}"
           user: "{{ userinfo.record[0].email }}"
+          business_purpose: "{{ business_purpose_value }}"
 
     - name: Display consolidated enriched_event
       ansible.builtin.debug:

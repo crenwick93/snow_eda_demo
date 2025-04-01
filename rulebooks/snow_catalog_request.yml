@@ -21,12 +21,7 @@
               req_number: "{{ event.payload.ritm_number }}"
 
     - name: Provision Special Projects VM
-      condition: >
-        event.enriched_event is defined and
-        event.enriched_event.ritm_details[0].variables
-        | selectattr('name', 'equalto', 'business_purpose')
-        | map(attribute='value')
-        | first == "Special Projects"
+      condition: event.business_purpose == "Special Projects"
       action:
         run_job_template:
           name: "Provision Special Project VM"
