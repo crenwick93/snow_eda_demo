@@ -3,6 +3,15 @@
   hosts: localhost
   connection: local
   tasks:
+    - name: Extract individual VM attributes
+      ansible.builtin.set_fact:
+        cpu: >-
+          {{ vm_specific_variables | selectattr('name', 'equalto', 'cpu') | map(attribute='value') | first }}
+        ram: >-
+          {{ vm_specific_variables | selectattr('name', 'equalto', 'ram') | map(attribute='value') | first }}
+        storage: >-
+          {{ vm_specific_variables | selectattr('name', 'equalto', 'storage') | map(attribute='value') | first }}
+
     - name: Provision Special Project VM
       ansible.builtin.debug:
         msg: |
@@ -12,4 +21,6 @@
           Requested For: {{ requested_for_user }}
           ----------------------------
           VM Request Details:
-          {{ vm_specific_variables }}
+          CPU: {{ cpu }}
+          RAM: {{ ram }}
+          Storage: {{ storage }}
