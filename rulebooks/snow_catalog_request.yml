@@ -32,6 +32,18 @@
               req_number: "{{ event.enriched_event.ritm_details[0].number.value }}"
               requested_for_user: "{{ event.enriched_event.ritm_details[0].requested_for.display_value }}"
 
+    - name: Provision Test VM
+      condition: event.business_purpose == "testing"
+      action:
+        run_job_template:
+          name: "Provision Test VM"
+          organization: Default
+          job_args:
+            extra_vars:
+              vm_specific_variables: "{{ event.enriched_event.ritm_details[0].variables }}"
+              req_number: "{{ event.enriched_event.ritm_details[0].number.value }}"
+              requested_for_user: "{{ event.enriched_event.ritm_details[0].requested_for.display_value }}"
+
 
 
 
