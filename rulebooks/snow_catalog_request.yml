@@ -29,7 +29,7 @@
         | first == "Special Projects"
       action:
         run_job_template:
-          name: "Demo Job Template"
+          name: "Provision Special Project VM"
           organization: Default
           job_args:
             extra_vars:

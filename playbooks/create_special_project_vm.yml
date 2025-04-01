@@ -13,4 +13,3 @@
           ----------------------------
           VM Request Details:
           {{ vm_specific_variables }}
-
