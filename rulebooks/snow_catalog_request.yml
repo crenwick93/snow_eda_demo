@@ -8,12 +8,6 @@
         host: 0.0.0.0
         port: 5000
   rules:
-    # - name: Output ServiceNow Information
-    #   condition: event.meta is defined
-    #   action:
-    #     debug:
-    #       var: event.payload
-
     - name: Enrich new REQ received from Service Catalog
       condition: event.meta is defined
       action:
@@ -27,7 +21,6 @@
               req_number: "{{ event.payload.ritm_number }}"
 
     - name: Provision VM
-      #condition: event.enriched_event.ritm_details is selectattr('cat_item.display_value', '==', "AAP EDA Multi Provision w/ Citrix")
       condition: event.enriched_event is defined
       action:
         run_job_template:
@@ -35,8 +28,9 @@
           organization: Default
           job_args:
             extra_vars:
-              req_sys_id: "{{ event.payload.req_sys_id | default('undefined') }}"
-              req_number: "{{ event.payload.ritm_number | default('undefined') }}"
+              req_sys_id: "{{ event.enriched_event.req_sys_id | default('undefined') }}"
+              req_number: "{{ event.enriched_event.ritm_details[0].number.display_value | default('undefined') }}"
+
 
 
 
