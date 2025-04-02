@@ -43,19 +43,3 @@
               vm_specific_variables: "{{ event.enriched_event.ritm_details[0].variables }}"
               req_number: "{{ event.enriched_event.ritm_details[0].number.value }}"
               requested_for_user: "{{ event.enriched_event.ritm_details[0].requested_for.display_value }}"
-
-
-
-
-
-
-        # run_workflow_template:
-        #   name: "EDA Multi Hypervisor Create and Config VM, Deploy Web App with Failure Paths Citrix"
-        #   organization: "Infrastructure"
-        #   job_args:
-        #     extra_vars:
-        #       vm_name: "{{ event.enriched_event.ritm_details[0].variables | selectattr('name', 'equalto', 'vm_name') | map(attribute='value') | join(',') }}"
-        #       owner: "{{ event.user }}"
-        #       env: "{{ event.enriched_event.ritm_details[0].variables | selectattr('name', 'equalto', 'env') | map(attribute='value') | join(',') }}"
-        #       ticket_number: "{{ event.original_event }}"
-
