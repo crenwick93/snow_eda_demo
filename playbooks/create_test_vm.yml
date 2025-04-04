@@ -37,9 +37,9 @@
           aws_instance_type: {{ instance_type }}
 
     # AWS specific tasks
-    - name: Launch EC2 instance in test environment
+    - name: Launch EC2 instance in test aws environment
       amazon.aws.ec2_instance:
-        name: special-projects-instance
+        name: test-instance
         key_name: "chris-aws"
         instance_type: "{{ instance_type }}"
         image_id: "ami-05238ab1443fdf48f"
@@ -55,7 +55,7 @@
               delete_on_termination: true
               volume_type: gp3
         tags:
-          special_projects: true
+          test_instance: true
       register: ec2_result
 
     - name: Show instance details
