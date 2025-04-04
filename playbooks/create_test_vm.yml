@@ -2,6 +2,12 @@
 - name: Provision Test VM
   hosts: localhost
   connection: local
+  vars:
+    instance_type_map:
+      "1_1": t3.nano       # 2 vCPU burstable, 0.5 GiB RAM — not an exact match, closest fit
+      "1_2": t3.micro      # 2 vCPU burstable, 1 GiB RAM
+      "2_4": t3.medium     # 2 vCPU, 4 GiB RAM
+      "2_8": t3.large      # 2 vCPU, 8 GiB RAM
   tasks:
     - name: Extract individual VM attributes
       ansible.builtin.set_fact:
@@ -11,6 +17,10 @@
           {{ vm_specific_variables | selectattr('name', 'equalto', 'ram') | map(attribute='value') | first }}
         storage: >-
           {{ vm_specific_variables | selectattr('name', 'equalto', 'storage') | map(attribute='value') | first }}
+
+    - name: Determine instance type based on CPU and RAM
+      set_fact:
+        instance_type: "{{ instance_type_map[cpu ~ '_' ~ ram] }}"
 
     - name: Provision Test VM
       ansible.builtin.debug:
@@ -24,3 +34,30 @@
           CPU: {{ cpu }}
           RAM: {{ ram }}
           Storage: {{ storage }}
+          aws_instance_type: {{ instance_type }}
+
+    # AWS specific tasks
+    - name: Launch EC2 instance in test environment
+      amazon.aws.ec2_instance:
+        name: special-projects-instance
+        key_name: "chris-aws"
+        instance_type: "{{ instance_type }}"
+        image_id: "ami-05238ab1443fdf48f"
+        region: "eu-west-2"
+        wait: yes
+        count: 1
+        vpc_subnet_id: "subnet-0ba9958ce9570c5f3"
+        security_group: "default"
+        volumes:
+          - device_name: /dev/xvda
+            ebs:
+              volume_size: "{{ storage.split()[0] | int }}"
+              delete_on_termination: true
+              volume_type: gp3
+        tags:
+          special_projects: true
+      register: ec2_result
+
+    - name: Show instance details
+      debug:
+        var: ec2_result

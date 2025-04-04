@@ -192,11 +192,6 @@ Then complete the rest of the rule activation form, selecting the AAP credential
 ![alt text](images/rule_complete1.png "Event Streams")
 <br>
 <br>
-After a short while, you will see the rulebook running.
-
-![alt text](images/running_rulebook.png "Event Streams")
-<br>
-<br>
 Under Automation Decisions > Rulebook Activations you can see a high level view of your Rulebooks. This is an easy way to keep an eye on your Rulebooks and which ones are firing.
 
 ![alt text](images/rule_fire_count.png "Event Streams")
@@ -225,20 +220,21 @@ Click into the approval request. You will see the following screen. **Do not cli
 <br>
 Go back onto AAP, go to Automation Decisions > Rulebook Activations. Then click on your newly created rulebook activation. Then click on the history tab. You should see the rulebook running here, click into it, this will bring up the rulebook logs.
 
-![alt text](images/rulebook_logs.png "Event Streams")
+![alt text](images/rulebook_logs1.png "Event Streams")
 <br>
 <br>
-Now go back to the approval screen in Service Now and click approve. After a little while, you should see the payload recieved in the logs.
+Now go back to the approval screen in Service Now and click approve. After a little while, you should see the payload recieved in the logs. You will see the ritm_number and req_sys_id.
 
-![alt text](images/payload_recieved.png "Event Streams")
+![alt text](images/payload_recieved1.png "Event Streams")
 <br>
 <br>
 Now we know that we are up and working. It's time to do some actual automation.
 <br>
 
 
+Now for some actual automation.
 ------------
-
+We're going keep this very simple. We will create the requested VM as an EC2 instance on AWS. 
 
 Troubleshooting
 ------------
