@@ -235,6 +235,9 @@ Now we know that we are up and working. It's time to do some actual automation.
 Now for some actual automation.
 ------------
 We're going keep this very simple. We will create the requested VM as an EC2 instance on AWS. 
+<br>
+<br>
+To do this we'll have to create a new 
 
 Troubleshooting
 ------------

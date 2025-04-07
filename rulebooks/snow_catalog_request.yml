@@ -43,3 +43,6 @@
               vm_specific_variables: "{{ event.enriched_event.ritm_details[0].variables }}"
               req_number: "{{ event.enriched_event.ritm_details[0].number.value }}"
               requested_for_user: "{{ event.enriched_event.ritm_details[0].requested_for.display_value }}"
+
+    # Could add rules for specififc catalog item name as another ruel example. "cat_item.display_value == 'AWS TEST VM'" the create AWS test VM. 
+    # Above example uses business purpose. 
