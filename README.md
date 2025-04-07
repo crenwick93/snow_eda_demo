@@ -237,7 +237,27 @@ Now for some actual automation.
 We're going keep this very simple. We will create the requested VM as an EC2 instance on AWS. 
 <br>
 <br>
-To do this we'll have to create a new 
+To do this we'll first need an Amazon Web Services credential created. I will not go into detail of how to do this, as it's out of scope for this Demo. Refer here for more information: https://docs.ansible.com/automation-controller/4.4/html/userguide/credentials.html#amazon-web-services 
+<br>
+<br>
+Next up, we need a new job template creating for creating that will take the variables from the request and process them for the EC2 instance creation. Under the playbooks directory, you will see a playbook called create_test_vm.yml. 
+<br>
+<br>
+A quick breakdown of this playbook shows it starts with variabilising an instance_type_map, which looks at the CPU and RAM variables and uses that information to create an instance type map.
+ ```yml
+instance_type_map:
+      "1_1": t3.nano       # 2 vCPU burstable, 0.5 GiB RAM — not an exact match, closest fit
+      "1_2": t3.micro      # 2 vCPU burstable, 1 GiB RAM
+      "2_4": t3.medium     # 2 vCPU, 4 GiB RAM
+      "2_8": t3.large      # 2 vCPU, 8 GiB RAM
+ ```
+<br>
+<br>
+Then we have four tasks. The first task is used to gather the CPU, RAM and storage values from the request. The second task is uses the CPU and RAM values to decide on an instnace type, using the instance type map. The third is a simple debug task to output information relevant to the VM. The fourth and final task uses the amazon.aws.ec2_instance module to create the EC2 instance with given value. Bare in mind, this is for demo purposes only and lots of the parameters have been hardcoded for this reason. (This is not best practice.) Adjust the hardcoded parameters to suit your environment.
+<br>
+<br>
+Create a new job template using the create_test_vm.yml playbook and attach the AWS credential you recently created. Remember to tick the Prompt on launch setting above Extra variables. This ensures the variables will be passed into the job template at runtime.
+
 
 Troubleshooting
 ------------

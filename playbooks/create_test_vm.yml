@@ -55,7 +55,7 @@
               delete_on_termination: true
               volume_type: gp3
         tags:
-          test_instance: true
+          Environment: Testing
       register: ec2_result
 
     - name: Show instance details
