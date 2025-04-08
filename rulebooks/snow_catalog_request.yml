@@ -36,7 +36,7 @@
       condition: event.business_purpose == "testing"
       action:
         run_job_template:
-          name: "Provision Test VM"
+          name: "isio"
           organization: Default
           job_args:
             extra_vars:

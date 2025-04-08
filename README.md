@@ -179,7 +179,7 @@ Now back to AAP to finish off this setup
 So at this point we have a Service Now catlog item configured to send a payload to EDA. But at this point EDA has no idea what to do with that payload. So now we'll create a Rulebook Activation to process that payload, and in turn process the request.
 <br>
 <br>
-In AAP, go to Automation Decisions > Rulebook Activations. Click 'Create rulebook activation'. Give it a suitable name and Organisation. From the project drop down, select 'EDA Demo' - the project we created previously. Under the Rulebook drop down, select snow_rulebook_debug.yml. You can see details of that rulebook in this repo under rulebooks (as this is the repo that project is reading from). We are choosing this rulebook as an initial rulebook because it is very simple and will simply outpu the payload so that we know the conneectivity between SNOW and EDA is working, before we go to more advanced things.
+In AAP, go to Automation Decisions > Rulebook Activations. Click 'Create rulebook activation'. Give it a suitable name and Organisation. From the project drop down, select 'EDA Demo' - the project we created previously. Under the Rulebook drop down, select snow_rulebook_debug.yml. You can see details of that rulebook in this repo under rulebooks (as this is the repo that project is reading from). We are choosing this rulebook as an initial rulebook because it is very simple and will simply output the payload so that we know the conneectivity between SNOW and EDA is working, before we go to more advanced things.
 <br>
 <br>
 Under Event streams, click on the litle cog, it will take you to the below screen. Select the event stream that you created earlier, then click save.
@@ -234,29 +234,94 @@ Now we know that we are up and working. It's time to do some actual automation.
 
 Now for some actual automation.
 ------------
-We're going keep this very simple. We will create the requested VM as an EC2 instance on AWS. 
+We're going keep this very simple. We will create the requested VM as an EC2 instance on AWS. Below is a diagram of the logical flow of the VM request:
+![alt text](images/vm_provisioning_flow.drawio.png "Event Streams")
+So we have a request come in from Service Now for a new VM. The event payload lands inside of the EDA rulebook for processing.
 <br>
 <br>
-To do this we'll first need an Amazon Web Services credential created. I will not go into detail of how to do this, as it's out of scope for this Demo. Refer here for more information: https://docs.ansible.com/automation-controller/4.4/html/userguide/credentials.html#amazon-web-services 
+Breaking down this rulebook (found under rulebooks/snow_catalog_request.yml) we see three rules. The first rule is a service now enrichment rule. This rule will be acivated on any event landing on this rulebook. This is because:
+```yaml
+condition: event.payload is defined
+```
+So as long as the payload is defined it will run the 'Enrich ServiceNow REQ' job template. It then uses:
+```yaml
+post_events: true
+```
+Which effectively takes the output of the job template which was run and passes that information back into the Rulebook. The 'Enrich ServiceNow REQ' job template uses the gather_ritm_details.yml playbook. We will not go into great detail on the inner workings of this playbook, but please read through it to get an understanding. The main part to note is below:
+
+```yml
+- name: Consolidate all facts and original event into set_stats
+  ansible.builtin.set_stats:
+    data:
+      enriched_event: "{{ enriched_event }}"
+      original_event: "{{ req_number | default({}) }}"
+      user: "{{ userinfo.record[0].email }}"
+      business_purpose: "{{ business_purpose_value }}"
+```
+We use the set_stats module to pass the information back to the rulebook. The 'post_events:true', any set_stats data that is set here can be accessed in the reactivation of the rulebook. So now we can access event.enriched_event or event.business_purpose etc. **Remember, at this point we are not setting a payload. So event.payload will be no longer accessible on the reactivation of the rulebook.** This caught me off guard, the first time I did this, I had **event.payload** set on one of the activated rules, and it kept failing with **missing variable**.
 <br>
 <br>
-Next up, we need a new job template creating for creating that will take the variables from the request and process them for the EC2 instance creation. Under the playbooks directory, you will see a playbook called create_test_vm.yml. 
+Once the new enriched data is passed back into the rulebook. It will ignore the first rule, as event.payload will no longer be defined (as described above). So from there it has two rules left. 
+
+```yml
+event.business_purpose == "special_projects"
+```
+OR
+```yml
+event.business_purpose == "testing"
+```
+<br>
+Meaning, a different actions will be taken depending on the business purpose. For demo purposes we will only be showing the activation of "event.business_purpose == 'testing'". This means that when a user selects a test VM in service now, it will activate this rule and create the AWS EC2 instance. 
 <br>
 <br>
-A quick breakdown of this playbook shows it starts with variabilising an instance_type_map, which looks at the CPU and RAM variables and uses that information to create an instance type map.
+However, feel free to extend this demo. The other rule in that rulebook: "event.business_purpose == 'special_projects'" could be used to create a VM on vmware for example. In this particualar demo, to keep everything in scope, if the **special_projects** rule gets activated it will only print something activate a job_template that will print the VM details.
+<br>
+<br>
+
+Okay, lets get started and set this up
+------------
+First we need an Amazon Web Services credential created. I will not go into detail of how to do this, as it's out of scope for this Demo. Refer here for more information: https://docs.ansible.com/automation-controller/4.4/html/userguide/credentials.html#amazon-web-services 
+<br>
+<br>
+Now we need three job templates creating.
+<br>
+| Job Template Name             | Playbook Name                 |
+|-------------------------------|-------------------------------|
+| Enrich ServiceNow REQ         | gather_ritm_details.yml       |
+| Provision Test VM             | create_test_vm.yml            |
+| Provision Special Projects VM | create_special_project_vm.yml |
+<br>
+You will find all of these playbooks under the playbooks directory. Create the job templates for each of them. Remember to tick the Prompt on launch setting above Extra variables on all job templates. This ensures the variables will be passed into the job template at runtime. Also, make sure to attach the newly created AWS credential to the "Provision Test VM" job template.
+
+
+
+
+<br>
+<br>
+A quick breakdown of the "create_test_vm.yml" playbook shows it starts with variabilising an instance_type_map, which looks at the CPU and RAM variables. It then uses that information to create an instance type map.
+
  ```yml
 instance_type_map:
-      "1_1": t3.nano       # 2 vCPU burstable, 0.5 GiB RAM — not an exact match, closest fit
-      "1_2": t3.micro      # 2 vCPU burstable, 1 GiB RAM
-      "2_4": t3.medium     # 2 vCPU, 4 GiB RAM
-      "2_8": t3.large      # 2 vCPU, 8 GiB RAM
+    "1_1": t2.small       # 1 vCPU, 1 GiB RAM
+    "2_4": t2.medium      # 2 vCPU, 4 GiB RAM
+    "2_8": t2.large       # 2 vCPU, 8 GiB RAM
  ```
 <br>
 <br>
-Then we have four tasks. The first task is used to gather the CPU, RAM and storage values from the request. The second task is uses the CPU and RAM values to decide on an instnace type, using the instance type map. The third is a simple debug task to output information relevant to the VM. The fourth and final task uses the amazon.aws.ec2_instance module to create the EC2 instance with given value. Bare in mind, this is for demo purposes only and lots of the parameters have been hardcoded for this reason. (This is not best practice.) Adjust the hardcoded parameters to suit your environment.
+Then we have four tasks. The first task is used to gather the CPU, RAM and storage values from the request. The second task uses the CPU and RAM values to decide on an instance type, using the instance type map. The third is a simple debug task to output information relevant to the VM. The fourth and final task uses the amazon.aws.ec2_instance module to create the EC2 instance with given value. Bare in mind, this is for demo purposes only and lots of the parameters have been hardcoded for this reason. (This is not best practice.) Adjust the hardcoded parameters to suit your environment.
 <br>
 <br>
-Create a new job template using the create_test_vm.yml playbook and attach the AWS credential you recently created. Remember to tick the Prompt on launch setting above Extra variables. This ensures the variables will be passed into the job template at runtime.
+That's it for the automation piece, lets get back to rulebooks.
+<br>
+<br>
+You can delete your existing rulebook activation, that was only for testing purposes. We now we need to create a new rulebook activation that uses the snow_catalog_request.yml rulebook. Found under the rulebooks directory.
+
+![alt text](images/snow_catalog_request_rulebook.png "Event Streams")
+<br>
+<br>
+Once that rulebook activation is running we go ahead and test this and see what happens.
+
+
 
 
 Troubleshooting
@@ -268,5 +333,5 @@ If you're getting this issue whenrunning the script on Service Now targeting EDA
 Instructions: Go to System Definition > Certificates in your SNOW instance, you can add your root CA cert there.
 <br>
 <br>
-**Any other issue**
+
 
