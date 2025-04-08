@@ -11,9 +11,14 @@ A user initiates a VM request via the ServiceNow Service Catalog. This request f
 
 1. Once approved, the same flow continues to create a catalog task.
 
-1. A ServiceNow business rule, triggered by the creation of this task, sends a payload containing the VM request details to Ansible EDA.
+1. A ServiceNow business rule, triggered by the creation of this task, sends a payload containing the VM request number to Event Driven Ansible.
 
-1. Ansible Automation Platform 2.5, using EDA Event Streams, receives this event and executes the appropriate automation workflow to provision the VM.
+1. Ansible Automation Platform 2.5, using EDA Event Streams, receives this event and enriches the request information by communicating with Service (Getting specific VM details). 
+
+1. EDA rulebook then performs action depending on the business purpose selected on the request.
+
+1. When business purpose == Testing, a rule is triggered to create an AWS EC2 instance.
+
 
 This demo illustrates how event-driven automation can streamline IT operations by connecting user service requests in ServiceNow with automated VM provisioning workflows in Ansible Automation Platform.
 
@@ -30,10 +35,11 @@ Assumptions
 ------------
 - AAP 2.5 is deployed and default decision environment available
 - Service Now Developer instance has been created
+- Working AWS environment with access key and secret key.
 
 Initial Actions on AAP
 ------------
-We have to create two credentials for this demo. One is a token for the event stream to accept incoming messages, the other is the AAP credential to run a job template.
+To start with, we'll create two credentials for this demo. One is a token for the event stream to accept incoming messages, the other is the AAP credential to run a job template.
 Log into AAP. Navigate to Automation Decisions > Infrastructure > Credentials. Click Create credential. Give the token a name (SNOW_token), choose an organisation, select 'Token Event Stream'. In the Type Details section, generate a random token and paste it into the Token field (Keep a note of this token somewhere). Leave HTTP Header Key as 'Authorization' (default). Then click 'Create credential'.
 
 ![alt text](images/create_token_es_credential.png "Event Streams")
