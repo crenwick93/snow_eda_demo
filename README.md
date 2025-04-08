@@ -65,7 +65,7 @@ Lets test this
 ------------
 
 Log onto your developer instance of Service Now. Navigate to 'All' > 'System Definition' > 'Scripts - Background'. This will allow you to run a freeform script to ensure the EDA has been setup correctly. Copy and paste the webhook_test_script.js script found in the snow_scripts directory of this repo. Replace 'example-url' with the URL that you copied in the above task. Replace the 'example-token' with the token found in credential you previously created. I have done so, in the example below. Click run and you should see a HTTP responce of 200 returned. 
-![alt text](images/test_script_snow.png "Event Streams")
+![alt text](images/test_script_snow1.png "Event Streams")
 
 As well as 1 event recieved in your newly created event stream in AAP.
 <br>
