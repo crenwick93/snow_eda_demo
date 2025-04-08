@@ -290,6 +290,7 @@ Now we need three job templates creating.
 | Enrich ServiceNow REQ         | gather_ritm_details.yml       |
 | Provision Test VM             | create_test_vm.yml            |
 | Provision Special Projects VM | create_special_project_vm.yml |
+
 <br>
 You will find all of these playbooks under the playbooks directory. Create the job templates for each of them. Remember to tick the Prompt on launch setting above Extra variables on all job templates. This ensures the variables will be passed into the job template at runtime. Also, make sure to attach the newly created AWS credential to the "Provision Test VM" job template.
 
