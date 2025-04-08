@@ -306,8 +306,8 @@ A quick breakdown of the "create_test_vm.yml" playbook shows it starts with vari
 
  ```yml
 instance_type_map:
-    "2_4": t2.medium      # 2 vCPU, 4 GiB RAM
-    "2_8": t2.large       # 2 vCPU, 8 GiB RAM
+    "2_4": t3.medium      # 2 vCPU, 4 GiB RAM
+    "2_8": t3.large       # 2 vCPU, 8 GiB RAM
  ```
 <br>
 <br>
