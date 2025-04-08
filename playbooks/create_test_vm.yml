@@ -4,7 +4,6 @@
   connection: local
   vars:
     instance_type_map:
-        "1_1": t2.small       # 1 vCPU, 1 GiB RAM
         "2_4": t2.medium      # 2 vCPU, 4 GiB RAM
         "2_8": t2.large       # 2 vCPU, 8 GiB RAM
   tasks:

@@ -293,16 +293,12 @@ Now we need three job templates creating.
 <br>
 You will find all of these playbooks under the playbooks directory. Create the job templates for each of them. Remember to tick the Prompt on launch setting above Extra variables on all job templates. This ensures the variables will be passed into the job template at runtime. Also, make sure to attach the newly created AWS credential to the "Provision Test VM" job template.
 
-
-
-
 <br>
 <br>
 A quick breakdown of the "create_test_vm.yml" playbook shows it starts with variabilising an instance_type_map, which looks at the CPU and RAM variables. It then uses that information to create an instance type map.
 
  ```yml
 instance_type_map:
-    "1_1": t2.small       # 1 vCPU, 1 GiB RAM
     "2_4": t2.medium      # 2 vCPU, 4 GiB RAM
     "2_8": t2.large       # 2 vCPU, 8 GiB RAM
  ```
@@ -321,8 +317,24 @@ You can delete your existing rulebook activation, that was only for testing purp
 <br>
 Once that rulebook activation is running we go ahead and test this and see what happens.
 
+Demo Running Instructions
+------------
+1. Go to All > Catalogs. Then click into Technical Catalog. From that window, you will see 'VM Provisioning' under Services. Click on that.
+<br>
+<br>
+Complete the form with example vm details, make sure you select 'Testing' as the business purpose. Also make sure you select a CPU and RAM combination compatible with an ec2 instance_type_map we showed earlier. Example: **2 vCPU, 4 GiB** RAM OR **2 vCPU, 8 GiB RAM.**
 
+1. Now we need to approve that request. Go to All > Self Service > My Approvals. You will see a new approval requested. Approve that request.
 
+1. Go back to AAP. Click Automation Execution > Jobs. You will see the EDA Enrich ServiceNow REQ run, quickly followed by the Provision Test VM.
+
+1. Log onto you AWS environment. You will see a new ec2 instance running with the tag Environment = Testing. 
+<br>
+<br>
+
+Summary
+------------
+To be completed
 
 Troubleshooting
 ------------
