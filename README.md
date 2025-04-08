@@ -330,6 +330,7 @@ Complete the form with example vm details, make sure you select 'Testing' as the
 1. Go back to AAP. Click Automation Execution > Jobs. You will see the EDA Enrich ServiceNow REQ run, quickly followed by the Provision Test VM.
 
 1. Log onto you AWS environment. You will see a new ec2 instance running with the tag Environment = Testing. 
+1. Optional: Repeat the steps but this time select "Special Projects" as business purpose. You will see that it does the same enrichment job, but then runs "Provision Special Project VM" job template instead.
 <br>
 <br>
 
