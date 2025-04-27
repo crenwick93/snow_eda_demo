@@ -37,7 +37,7 @@
     # AWS specific tasks
     - name: Launch EC2 instance in test aws environment
       amazon.aws.ec2_instance:
-        name: TEST INSTANCE
+        name: "TEST INSTANCE ---- DEMO 1"
         key_name: "chris-aws"
         instance_type: "{{ instance_type }}"
         image_id: "ami-05238ab1443fdf48f"
