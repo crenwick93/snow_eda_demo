@@ -8,6 +8,9 @@
         host: 0.0.0.0
         port: 5000
   rules:
+   ######################################################################################################################
+    # Enrich new request recieved from service now - We need to know the specs of the VM they are asking for
+
     - name: Enrich new REQ received from Service Catalog
       condition: event.payload is defined
       action:
@@ -19,6 +22,9 @@
             extra_vars:
               req_sys_id: "{{ event.payload.req_sys_id }}"
               req_number: "{{ event.payload.ritm_number }}"
+
+  ######################################################################################################################
+    # Post the events back into this rulebook and act on the enriched event, deciding where to build the VM
 
     - name: Provision Special Projects VM
       condition: event.business_purpose == "special_projects"
@@ -32,17 +38,14 @@
               req_number: "{{ event.enriched_event.ritm_details[0].number.value }}"
               requested_for_user: "{{ event.enriched_event.ritm_details[0].requested_for.display_value }}"
 
-    # Could add rules for specific catalog item name as another ruel example. "cat_item.display_value == 'AWS TEST VM'" the create AWS test VM.
-    # Above example uses business purpose.
     - name: Provision Test VM
       condition: event.business_purpose == "testing"
       action:
         run_job_template:
-          name: "isio"
+          name: "Provision Test VM"
           organization: Default
           job_args:
             extra_vars:
               vm_specific_variables: "{{ event.enriched_event.ritm_details[0].variables }}"
               req_number: "{{ event.enriched_event.ritm_details[0].number.value }}"
               requested_for_user: "{{ event.enriched_event.ritm_details[0].requested_for.display_value }}"
-
