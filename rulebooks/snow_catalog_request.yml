@@ -16,7 +16,7 @@
       action:
         run_job_template:
           name: "Enrich ServiceNow REQ"
-          organization: Default
+          organization: Demo1
           post_events: true
           job_args:
             extra_vars:
@@ -31,7 +31,7 @@
       action:
         run_job_template:
           name: "Provision Special Project VM"
-          organization: Default
+          organization: Demo1
           job_args:
             extra_vars:
               vm_specific_variables: "{{ event.enriched_event.ritm_details[0].variables }}"
@@ -43,7 +43,7 @@
       action:
         run_job_template:
           name: "Provision Test VM"
-          organization: Default
+          organization: Demo1
           job_args:
             extra_vars:
               vm_specific_variables: "{{ event.enriched_event.ritm_details[0].variables }}"
