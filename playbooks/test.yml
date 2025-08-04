@@ -1,0 +1,8 @@
+---
+- name: Add user to group example
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Add user to group
+      ansible.builtin.debug:
+        msg: adding user to group
