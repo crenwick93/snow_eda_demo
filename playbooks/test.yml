@@ -10,4 +10,4 @@
     - name: Publish outcome for ServiceNow to read
       set_stats:
         data:
-          sn_message: "Test information"
+          status_msg: "Test information"
