@@ -9,7 +9,7 @@
         port: 5000
   rules:
    ######################################################################################################################
-    # Enrich new request recieved from service now - We need to know the specs of the VM they are asking for
+    # Enrich new request recieved from servicenow - We need to know the details of the VM they are asking for
 
     - name: Enrich new REQ received from Service Catalog
       condition: event.payload is defined
