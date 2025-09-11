@@ -20,7 +20,6 @@
           post_events: true
           job_args:
             extra_vars:
-              req_sys_id: "{{ event.payload.req_sys_id }}"
               req_number: "{{ event.payload.ritm_number }}"
 
   ######################################################################################################################
