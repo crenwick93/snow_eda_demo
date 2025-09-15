@@ -44,7 +44,7 @@
         region: "eu-north-1"
         wait: yes
         count: 1
-        vpc_subnet_id: "subnet-0dc8f256f7ff28ac9"
+        vpc_subnet_id: "subnet-0b8a0f4520ae89e47"
         security_group: "default"
         volumes:
           - device_name: /dev/xvda
