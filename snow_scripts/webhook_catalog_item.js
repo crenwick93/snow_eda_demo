@@ -9,19 +9,16 @@
 
         var reqItemSysId = current.getValue("request_item");
         var ritm_number = "";
-        var req_sys_id = "";
 
         if (reqItemSysId) {
             var reqItem = new GlideRecord('sc_req_item');
             if (reqItem.get(reqItemSysId)) {
                 ritm_number = reqItem.getValue("number"); // RITM number
-                req_sys_id = reqItem.getValue("request"); // sys_id of REQ
             }
         }
 
         var obj = {
-            "ritm_number": ritm_number,
-            "req_sys_id": req_sys_id
+            "ritm_number": ritm_number
         };
 
         var body = JSON.stringify(obj);
