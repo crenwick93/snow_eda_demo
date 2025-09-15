@@ -38,13 +38,13 @@
     - name: Launch EC2 instance in test aws environment
       amazon.aws.ec2_instance:
         name: "TEST INSTANCE ---- DEMO 1"
-        key_name: "chris-aws"
+        key_name: "chris-lab"
         instance_type: "{{ instance_type }}"
         image_id: "ami-05238ab1443fdf48f"
-        region: "eu-west-2"
+        region: "eu-north-1"
         wait: yes
         count: 1
-        vpc_subnet_id: "subnet-0ba9958ce9570c5f3"
+        vpc_subnet_id: "subnet-0dc8f256f7ff28ac9"
         security_group: "default"
         volumes:
           - device_name: /dev/xvda
