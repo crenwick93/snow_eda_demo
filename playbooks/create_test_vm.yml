@@ -40,7 +40,7 @@
         name: "TEST INSTANCE ---- DEMO 1"
         key_name: "chris-lab"
         instance_type: "{{ instance_type }}"
-        image_id: "ami-05238ab1443fdf48f"
+        image_id: "ami-005019f47c98b4abd"
         region: "eu-north-1"
         wait: yes
         count: 1
